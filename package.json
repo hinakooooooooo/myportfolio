@@ -1,0 +1,17 @@
+{
+  "name": "hinako-portfolio",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "init": "node init_db.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "ejs": "^3.1.9",
+    "sqlite3": "^5.1.6",
+    "dotenv": "^16.3.1",
+    "express-session": "^1.17.3",
+    "nodemailer": "^6.9.7"
+  }
+}

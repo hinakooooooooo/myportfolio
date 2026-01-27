@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>News | M.Hinako</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="section-container">
+  <a href="/" style="text-decoration:none;">← Topへ</a>
+  <h1 class="section-label" style="margin-top:40px;">NEWS</h1>
+  <div class="news-list" style="max-width:900px; margin:0 auto;">
+    <% if (news && news.length) { %>
+      <% news.forEach(n => { %>
+        <article class="news-item" style="border: 1.6px solid var(--text); border-radius: 18px; padding:18px; margin-bottom:12px;">
+          <p class="news-date"><%= n.date || '' %></p>
+          <p class="news-title" style="margin:6px 0 10px; font-size:1.1rem;"><%= n.title %></p>
+          <a href="/news/<%= n.id %>" class="brand-modal__link" style="text-decoration:none;">詳細を見る →</a>
+        </article>
+      <% }) %>
+    <% } else { %>
+      <p>まだニュースはありません。</p>
+    <% } %>
+  </div>
+</body>
+</html>

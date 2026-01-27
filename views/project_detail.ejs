@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= project.title %> | M.Hinako</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <header>
+        <a href="/" style="text-decoration: none; color: var(--text); font-weight: bold;">← BACK</a>
+    </header>
+
+    <main class="section-container">
+        <h1 style="font-size: 3.5rem; margin-bottom: 20px;"><%= project.title %></h1>
+        <div style="background: var(--card-bg); padding: 50px; border: 4px solid var(--text); border-radius: 40px;">
+            <h3 style="color: var(--accent);">製作の過程と感情</h3>
+            <p style="font-size: 1.2rem; line-height: 1.8; margin-top: 20px;">
+                <% if (project.title === '絵本のおまじない') { %>
+                    「大丈夫」をそっと渡す、絵本のギフト。<br>
+                    自分を責めてしまう瞬間に寄り添う言葉を、物語として編み直した。
+                <% } else { %>
+                    <%= project.content %>
+                <% } %>
+            </p>
+            <h3 style="color: var(--accent); margin-top: 40px;">このプロジェクトからの学び</h3>
+            <p style="font-size: 1.2rem; line-height: 1.8; margin-top: 20px;">
+                <%= project.learning %>
+            </p>
+        </div>
+    </main>
+</body>
+</html>
