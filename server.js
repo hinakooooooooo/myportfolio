@@ -122,6 +122,14 @@ app.post('/api/projects', (req, res) => {
   });
 });
 
+// API: delete project (AJAX)
+app.delete('/api/projects/:id', (req, res) => {
+  db.run('DELETE FROM projects WHERE id = ?', [req.params.id], (err) => {
+    if (err) return res.status(500).json({ ok:false, error: err.message });
+    return res.json({ ok:true });
+  });
+});
+
 app.post('/admin/projects/delete/:id', (req, res) => {
   db.run('DELETE FROM projects WHERE id = ?', [req.params.id], (err) => {
     if (err) return res.status(500).send('DB error');

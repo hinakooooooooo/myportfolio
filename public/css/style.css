@@ -5,10 +5,56 @@
   font-display: swap;
 }
 
-:root { --bg: #fffcf9; --text: #2d3748; --card-bg: #ffffff; }
-body.theme-night { --bg: #001f3f; --text: #ffdc00; --card-bg: #002d5a; }
-body.theme-peach { --bg: #ffc0cb; --text: #0044cc; --card-bg: #ffd1d9; }
-body.theme-mirror { --bg: #5d4037; --text: #7fdbff; --card-bg: #6d4c41; }
+:root { 
+  --bg: #fffcf9; 
+  --text: #2d3748; 
+  --card-bg: #ffffff;
+
+  /* Strength / Case (note-card) palette */
+  --note-bg: #fffaf5;
+  --note-layer: rgba(255,255,255,0.92);
+  --note-border: rgba(45,55,72,.12);
+  --note-text: #2d3748;
+  --note-dot-from: #ffdfe9;
+  --note-dot-to: #ffeef8;
+}
+body.theme-night { 
+  --bg: #001f3f; 
+  --text: #ffdc00; 
+  --card-bg: #002d5a;
+
+  /* 夜間でも文字が見えるようコントラストを再設定 */
+  --note-bg: rgba(255,255,255,0.06);
+  --note-layer: rgba(255,255,255,0.08);
+  --note-border: rgba(255,220,0,0.34);
+  --note-text: #fff7c2;
+  --note-dot-from: rgba(255,220,0,0.55);
+  --note-dot-to: rgba(255,220,0,0.22);
+}
+body.theme-peach { 
+  --bg: #ffc0cb; 
+  --text: #0044cc; 
+  --card-bg: #ffd1d9;
+  --note-bg: #ffe6ed;
+  --note-layer: rgba(255,255,255,0.94);
+  --note-border: rgba(0,68,204,0.16);
+  --note-text: #1f2f52;
+  --note-dot-from: #ffdfe9;
+  --note-dot-to: #ffeef8;
+}
+body.theme-mirror { 
+  --bg: #5d4037; 
+  --text: #7fdbff; 
+  --card-bg: #6d4c41;
+
+  /* 茶系テーマ用の読みやすい配色 */
+  --note-bg: rgba(255,255,255,0.08);
+  --note-layer: rgba(255,255,255,0.12);
+  --note-border: rgba(127,219,255,0.28);
+  --note-text: #e6f7ff;
+  --note-dot-from: rgba(127,219,255,0.55);
+  --note-dot-to: rgba(127,219,255,0.24);
+}
 
 * { box-sizing: border-box; }
 body {
@@ -376,6 +422,8 @@ header a { text-decoration: none; color: inherit; margin-left: 20px; }
 .admin-modal__panel{
   width: min(520px, 92vw);
   padding: 28px 26px 24px;
+  max-height: 86vh;
+  overflow-y: auto;
 }
 .admin-form{
   display:flex;
@@ -412,6 +460,65 @@ header a { text-decoration: none; color: inherit; margin-left: 20px; }
 .admin-status{
   font-size:.9rem;
   opacity:.8;
+}
+
+.admin-divider{
+  height:1px;
+  margin:18px 0 14px;
+  background: linear-gradient(90deg, transparent, rgba(0,0,0,.12), transparent);
+}
+.admin-delete{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.admin-delete__title{
+  margin:0;
+  font-size:1.05rem;
+}
+.admin-delete__hint{
+  font-size:.9rem;
+  opacity:.75;
+}
+.admin-delete__list{
+  max-height:320px;
+  overflow-y:auto;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  padding-right:4px;
+}
+.admin-delete__item{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:14px;
+  padding:10px 12px;
+  border:1px solid rgba(45,55,72,.14);
+  border-radius:12px;
+  background: rgba(255,255,255,.92);
+}
+.admin-delete__name{
+  font-weight:700;
+}
+.admin-delete__meta{
+  font-size:.9rem;
+  opacity:.7;
+}
+.admin-delete__btn{
+  border:1.2px solid #e25555;
+  background: #ffecec;
+  color:#d33434;
+  padding:8px 12px;
+  border-radius:10px;
+  cursor:pointer;
+}
+.admin-delete__btn:hover{
+  background:#ffd6d6;
+}
+.admin-delete__empty{
+  margin:0;
+  opacity:.7;
 }
 
 .brand-modal__link{
@@ -486,15 +593,16 @@ header a { text-decoration: none; color: inherit; margin-left: 20px; }
   position: relative;
   border-radius: 24px;
   padding: 28px 28px 32px;
-  background: #fffaf5;
-  box-shadow:0 10px 28px rgba(0,0,0,.06);
+  background: var(--note-bg);
+  box-shadow:0 10px 28px color-mix(in srgb, var(--note-border) 45%, transparent);
   line-height: 1.8;
   max-width: 1000px;
   overflow: hidden;
   height: 100%;
   display: flex;
   flex-direction: column;
-  border:1px solid rgba(45,55,72,.12);
+  border:1px solid var(--note-border);
+  color: var(--note-text);
 }
 .note-card h3{
   margin: 0 0 14px;
@@ -519,19 +627,19 @@ header a { text-decoration: none; color: inherit; margin-left: 20px; }
   height: 100%;
 }
 .note-card--accent{
-  background: linear-gradient(150deg, #fff3f8 0%, #ffffff 60%);
-  border:1px solid rgba(45,55,72,.10);
+  background: linear-gradient(150deg, color-mix(in srgb, var(--note-bg) 80%, #fff 20%) 0%, var(--note-bg) 60%);
+  border:1px solid var(--note-border);
 }
 .note-card--case{
-  background: linear-gradient(150deg, #f5f7ff 0%, #ffffff 60%);
-  border:1px solid rgba(45,55,72,.10);
+  background: linear-gradient(150deg, color-mix(in srgb, var(--note-bg) 80%, #e9f1ff 20%) 0%, var(--note-bg) 60%);
+  border:1px solid var(--note-border);
 }
 .note-card::after{
   content:"";
   position:absolute;
   inset:-30% 60% auto auto;
   width:220px; height:220px;
-  background: radial-gradient(circle, rgba(255,255,255,0.45) 0%, rgba(255,255,255,0) 60%);
+  background: radial-gradient(circle, color-mix(in srgb, var(--note-layer) 70%, transparent) 0%, rgba(255,255,255,0) 60%);
   transform: rotate(12deg);
   pointer-events:none;
 }
@@ -540,7 +648,7 @@ header a { text-decoration: none; color: inherit; margin-left: 20px; }
   position:absolute;
   inset:auto auto -28% -20%;
   width:180px; height:180px;
-  background: radial-gradient(circle, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0) 60%);
+  background: radial-gradient(circle, color-mix(in srgb, var(--note-layer) 50%, transparent) 0%, rgba(255,255,255,0) 60%);
   transform: rotate(-8deg);
   pointer-events:none;
 }
@@ -554,7 +662,7 @@ header a { text-decoration: none; color: inherit; margin-left: 20px; }
 .nc-sub{
   font-size: 1rem;
   line-height: 1.7;
-  opacity: 0.82;
+  opacity: 0.9;
 }
 .nc-tags{
   display:flex;
@@ -566,11 +674,12 @@ header a { text-decoration: none; color: inherit; margin-left: 20px; }
 .chip{
   padding:7px 12px;
   border-radius: 999px;
-  border:1.2px solid rgba(45,55,72,.28);
-  background: rgba(255,255,255,.9);
+  border:1.2px solid color-mix(in srgb, var(--note-border) 70%, transparent);
+  background: var(--note-layer);
   font-size: .9rem;
   line-height:1;
-  box-shadow: 0 6px 12px rgba(0,0,0,.04);
+  box-shadow: 0 6px 12px color-mix(in srgb, var(--note-border) 30%, transparent);
+  color: inherit;
 }
 .nc-steps{
   display:flex;
@@ -583,23 +692,23 @@ header a { text-decoration: none; color: inherit; margin-left: 20px; }
   grid-template-columns: 36px 1fr;
   gap:12px;
   padding:12px 14px;
-  background: rgba(255,255,255,.92);
+  background: var(--note-layer);
   border-radius:16px;
-  box-shadow:0 6px 14px rgba(0,0,0,.05);
-  border:1px solid rgba(45,55,72,.10);
+  box-shadow:0 6px 14px color-mix(in srgb, var(--note-border) 30%, transparent);
+  border:1px solid color-mix(in srgb, var(--note-border) 80%, transparent);
 }
 .step-dot{
   width:36px;height:36px;
   border-radius:50%;
   display:grid;
   place-items:center;
-  background: linear-gradient(135deg, #ffdfe9 0%, #ffeef8 100%);
-  color:#4b4b4b;
+  background: linear-gradient(135deg, var(--note-dot-from) 0%, var(--note-dot-to) 100%);
+  color: #3b3b3b;
   font-weight:700;
   font-size:1rem;
 }
 .note-card--case .step-dot{
-  background: linear-gradient(135deg, #dfe8ff 0%, #eef3ff 100%);
+  background: linear-gradient(135deg, var(--note-dot-from) 0%, var(--note-dot-to) 100%);
 }
 .step-title{
   font-weight:700;
@@ -610,14 +719,14 @@ header a { text-decoration: none; color: inherit; margin-left: 20px; }
   margin:0;
   font-size:.98rem;
   line-height:1.6;
-  opacity:0.9;
+  opacity:0.92;
 }
 .nc-now{
   margin-top:16px;
   padding:10px 14px;
   border-radius:14px;
-  background: rgba(255,255,255,.9);
-  border:1px dashed rgba(45,55,72,.18);
+  background: var(--note-layer);
+  border:1px dashed color-mix(in srgb, var(--note-border) 90%, transparent);
   font-weight:600;
   line-height:1.6;
   z-index:1;
@@ -662,18 +771,18 @@ header a { text-decoration: none; color: inherit; margin-left: 20px; }
   margin-top: 10px;
 }
 .case-row{
-  border: 1.4px solid var(--text);
+  border: 1.4px solid color-mix(in srgb, var(--note-border) 90%, transparent);
   border-radius: 16px;
   padding: 12px 14px;
-  background: rgba(255,255,255,0.85);
-  box-shadow: 0 8px 16px rgba(0,0,0,.05);
+  background: var(--note-layer);
+  box-shadow: 0 8px 16px color-mix(in srgb, var(--note-border) 30%, transparent);
 }
 .case-chip{
   display:inline-block;
   padding:4px 10px;
   border-radius: 999px;
-  border:1.2px solid var(--text);
-  background: var(--card-bg);
+  border:1.2px solid color-mix(in srgb, var(--note-border) 80%, transparent);
+  background: var(--note-layer);
   font-size: .85rem;
   margin-bottom:6px;
 }

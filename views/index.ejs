@@ -396,6 +396,26 @@
         <span class="admin-status" id="cmsStatus"></span>
       </div>
     </form>
+
+    <div class="admin-divider"></div>
+    <div class="admin-delete">
+      <h4 class="admin-delete__title">既存ブランドを削除</h4>
+      <div class="admin-delete__hint">不要になったカードを選んで削除できます。</div>
+      <div class="admin-delete__list" id="cmsDeleteList">
+        <% if (projects.length === 0) { %>
+          <p class="admin-delete__empty">まだブランドがありません。</p>
+        <% } %>
+        <% projects.forEach(p => { %>
+          <div class="admin-delete__item">
+            <div>
+              <div class="admin-delete__name"><%= p.title %></div>
+              <div class="admin-delete__meta"><%= p.tag %> <%= p.date %></div>
+            </div>
+            <button type="button" class="admin-delete__btn" data-id="<%= p.id %>">削除</button>
+          </div>
+        <% }) %>
+      </div>
+    </div>
   </div>
 </div>
 

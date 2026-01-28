@@ -129,5 +129,27 @@ document.addEventListener('DOMContentLoaded', () => {
         cmsStatus.textContent = '通信エラーが発生しました。';
       }
     });
+
+    // delete buttons
+    cmsModal.querySelectorAll('.admin-delete__btn').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const id = btn.dataset.id;
+        if (!id) return;
+        if (!confirm('このブランドカードを削除しますか？')) return;
+        cmsStatus.textContent = '削除中...';
+        try {
+          const res = await fetch(`/api/projects/${id}`, { method:'DELETE', headers:{ 'Accept':'application/json' } });
+          const json = await res.json();
+          if (json && json.ok) {
+            cmsStatus.textContent = '削除しました。リロードします。';
+            setTimeout(() => location.reload(), 800);
+          } else {
+            cmsStatus.textContent = '削除に失敗しました。';
+          }
+        } catch (err) {
+          cmsStatus.textContent = '通信エラーが発生しました。';
+        }
+      });
+    });
   }
 });
