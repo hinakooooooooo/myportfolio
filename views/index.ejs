@@ -139,11 +139,6 @@
 
         <section id="brands" class="section-container">
             <h2 class="section-label">BRANDS</h2>
-            <% if (isAdmin) { %>
-            <div class="cms-hint">
-                <button class="cms-btn" type="button" id="cmsOpenBtn" aria-label="ブランドCMSを開く">＋ CMSで編集</button>
-            </div>
-            <% } %>
             <p class="brands-lead">
                 感情を起点にして、作ってきたブランドたちをご紹介します。<br>
                 <span>→</span> をタップすると、ブランドの詳細と過程を覗くことができます。
@@ -358,70 +353,7 @@
   </div>
 </div>
 
-<!-- 簡易CMS（ポップアップで追加のみ） -->
-<% if (isAdmin) { %>
-<div class="brand-modal" id="cmsModal" aria-hidden="true">
-  <div class="brand-modal__backdrop" data-close></div>
-  <div class="brand-modal__panel admin-modal__panel" role="dialog" aria-modal="true" aria-labelledby="cmsModalTitle">
-    <button class="brand-modal__close" type="button" data-close aria-label="閉じる">×</button>
-    <h3 class="brand-modal__title" id="cmsModalTitle">ブランドを追加</h3>
-    <form id="cmsForm" class="admin-form">
-      <div class="admin-field">
-        <label>タイトル</label>
-        <input name="title" required>
-      </div>
-      <div class="admin-field">
-        <label>タグ</label>
-        <input name="tag">
-      </div>
-      <div class="admin-field">
-        <label>日付</label>
-        <input name="date" placeholder="2026-01-27">
-      </div>
-      <div class="admin-field">
-        <label>画像URL</label>
-        <input name="image_url" placeholder="https://...">
-      </div>
-      <div class="admin-field">
-        <label>説明（ポップアップ用）</label>
-        <textarea name="description" rows="2"></textarea>
-      </div>
-      <div class="admin-field">
-        <label>本文（プロセス・学びなど）</label>
-        <textarea name="content" rows="3"></textarea>
-      </div>
-      <div class="admin-field">
-        <label>学び / 今</label>
-        <textarea name="learning" rows="2"></textarea>
-      </div>
-      <div class="admin-actions">
-        <button type="submit" class="submit-btn">追加する</button>
-        <span class="admin-status" id="cmsStatus"></span>
-      </div>
-    </form>
-
-    <div class="admin-divider"></div>
-    <div class="admin-delete">
-      <h4 class="admin-delete__title">既存ブランドを削除</h4>
-      <div class="admin-delete__hint">不要になったカードを選んで削除できます。</div>
-      <div class="admin-delete__list" id="cmsDeleteList">
-        <% if (projects.length === 0) { %>
-          <p class="admin-delete__empty">まだブランドがありません。</p>
-        <% } %>
-        <% projects.forEach(p => { %>
-          <div class="admin-delete__item">
-            <div>
-              <div class="admin-delete__name"><%= p.title %></div>
-              <div class="admin-delete__meta"><%= p.tag %> <%= p.date %></div>
-            </div>
-            <button type="button" class="admin-delete__btn" data-id="<%= p.id %>">削除</button>
-          </div>
-        <% }) %>
-      </div>
-    </div>
-  </div>
-</div>
-<% } %>
+<!-- CMS ポップアップ削除：管理は /admin から実施 -->
 
 <script src="/js/main.js"></script>
 </body>
