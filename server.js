@@ -1,10 +1,13 @@
+require('dotenv').config();
 const express = require('express');
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 const nodemailer = require('nodemailer');
+const session = require('express-session');
 
 const app = express();
 const db = new sqlite3.Database(path.join(__dirname, 'database.db'));
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin';
 
 // --- DB bootstrap: ensure schema ---
 const ensureSchema = () => {
@@ -53,12 +56,24 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.set('trust proxy', 1);
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'dev-secret',
+  resave: false,
+  saveUninitialized: false,
+  cookie: { secure: false }
+}));
+
+const requireAdmin = (req, res, next) => {
+  if (req.session && req.session.isAdmin) return next();
+  return res.redirect('/login');
+};
 
 // --- Routes ---
 app.get('/', (req, res) => {
   db.all('SELECT * FROM projects ORDER BY id ASC', [], (err, projects) => {
     if (err) return res.status(500).send('DB error');
-    res.render('index', { projects });
+    res.render('index', { projects, isAdmin: !!(req.session && req.session.isAdmin) });
   });
 });
 
@@ -71,15 +86,31 @@ app.get('/projects/:id', (req, res) => {
   });
 });
 
+// --- Auth ---
+app.get('/login', (req, res) => {
+  res.render('admin/login', { error: null });
+});
+app.post('/login', (req, res) => {
+  const { password } = req.body;
+  if (password && password === ADMIN_PASSWORD) {
+    req.session.isAdmin = true;
+    return res.redirect('/admin');
+  }
+  return res.status(401).render('admin/login', { error: 'パスワードが違います' });
+});
+app.post('/logout', (req, res) => {
+  req.session.destroy(() => res.redirect('/'));
+});
+
 // --- Admin (簡易CMS) ---
-app.get('/admin', (req, res) => {
+app.get('/admin', requireAdmin, (req, res) => {
   db.all('SELECT * FROM projects ORDER BY id DESC', [], (err, rows) => {
     if (err) return res.status(500).send('DB error');
     res.render('admin/dashboard', { projects: rows });
   });
 });
 
-app.post('/admin/projects/add', (req, res) => {
+app.post('/admin/projects/add', requireAdmin, (req, res) => {
   const { title, tag, date, image_url, description, content, learning } = req.body;
   const sql = `
     INSERT INTO projects (title, tag, date, image_url, description, content, learning)
@@ -101,7 +132,7 @@ app.post('/admin/projects/add', (req, res) => {
 });
 
 // API: add project (AJAX)
-app.post('/api/projects', (req, res) => {
+app.post('/api/projects', requireAdmin, (req, res) => {
   const { title, tag, date, image_url, description, content, learning } = req.body;
   const sql = `
     INSERT INTO projects (title, tag, date, image_url, description, content, learning)
@@ -123,7 +154,7 @@ app.post('/api/projects', (req, res) => {
 });
 
 // API: delete project (AJAX)
-app.delete('/api/projects/:id', (req, res) => {
+app.delete('/api/projects/:id', requireAdmin, (req, res) => {
   db.run('DELETE FROM projects WHERE id = ?', [req.params.id], (err) => {
     if (err) return res.status(500).json({ ok:false, error: err.message });
     return res.json({ ok:true });
@@ -138,14 +169,14 @@ app.post('/admin/projects/delete/:id', (req, res) => {
 });
 
 // --- News CMS ---
-app.get('/admin/news', (req, res) => {
+app.get('/admin/news', requireAdmin, (req, res) => {
   db.all('SELECT * FROM news ORDER BY date DESC, id DESC', [], (err, rows) => {
     if (err) return res.status(500).send('DB error');
     res.render('admin/news', { news: rows });
   });
 });
 
-app.post('/admin/news/add', (req, res) => {
+app.post('/admin/news/add', requireAdmin, (req, res) => {
   const { title, body, date, link } = req.body;
   db.run(
     'INSERT INTO news (title, body, date, link) VALUES (?, ?, ?, ?)',
@@ -157,7 +188,7 @@ app.post('/admin/news/add', (req, res) => {
   );
 });
 
-app.post('/admin/news/delete/:id', (req, res) => {
+app.post('/admin/news/delete/:id', requireAdmin, (req, res) => {
   db.run('DELETE FROM news WHERE id = ?', [req.params.id], (err) => {
     if (err) return res.status(500).send('DB error');
     return res.redirect('/admin/news');

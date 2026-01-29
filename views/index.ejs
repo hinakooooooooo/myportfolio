@@ -139,9 +139,11 @@
 
         <section id="brands" class="section-container">
             <h2 class="section-label">BRANDS</h2>
+            <% if (isAdmin) { %>
             <div class="cms-hint">
                 <button class="cms-btn" type="button" id="cmsOpenBtn" aria-label="ブランドCMSを開く">＋ CMSで編集</button>
             </div>
+            <% } %>
             <p class="brands-lead">
                 感情を起点にして、作ってきたブランドたちをご紹介します。<br>
                 <span>→</span> をタップすると、ブランドの詳細と過程を覗くことができます。
@@ -357,6 +359,7 @@
 </div>
 
 <!-- 簡易CMS（ポップアップで追加のみ） -->
+<% if (isAdmin) { %>
 <div class="brand-modal" id="cmsModal" aria-hidden="true">
   <div class="brand-modal__backdrop" data-close></div>
   <div class="brand-modal__panel admin-modal__panel" role="dialog" aria-modal="true" aria-labelledby="cmsModalTitle">
@@ -418,6 +421,7 @@
     </div>
   </div>
 </div>
+<% } %>
 
 <script src="/js/main.js"></script>
 </body>
