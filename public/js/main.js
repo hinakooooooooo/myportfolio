@@ -4,11 +4,15 @@ document.addEventListener('DOMContentLoaded', () => {
   const titleEl = document.getElementById('brandModalTitle');
   const descEl = document.getElementById('brandModalDesc');
   const processEl = document.getElementById('brandModalProcess');
+  const contentEl = document.getElementById('brandModalContent');
+  const learningEl = document.getElementById('brandModalLearning');
   if (modal && titleEl && descEl && processEl) {
     const openModal = (data) => {
       titleEl.textContent = data.title || '';
       descEl.textContent = data.emotion || data.desc || '';
       processEl.textContent = data.process || '';
+      if (contentEl) contentEl.textContent = data.content || '';
+      if (learningEl) learningEl.textContent = data.learning || '';
       modal.setAttribute('aria-hidden', 'false');
       document.body.style.overflow = 'hidden';
     };
@@ -41,7 +45,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const matchYear = year ? card.dataset.year === year : true;
       const matchKw = kw
         ? (card.dataset.title || '').toLowerCase().includes(kw) ||
-          (card.dataset.desc || '').toLowerCase().includes(kw)
+          (card.dataset.desc || '').toLowerCase().includes(kw) ||
+          (card.dataset.content || '').toLowerCase().includes(kw)
         : true;
       card.style.display = matchTag && matchYear && matchKw ? '' : 'none';
     });

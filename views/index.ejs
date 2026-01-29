@@ -144,8 +144,33 @@
                 <span>→</span> をタップすると、ブランドの詳細と過程を覗くことができます。
             </p>
 
+            <% 
+              const tags = [...new Set(projects.map(p => p.tag).filter(Boolean))];
+              const years = [...new Set(projects.map(p => (p.date || '').slice(0,4)).filter(Boolean))];
+            %>
+            <div class="brand-filter">
+              <label>タグ
+                <select id="filterTag">
+                  <option value="">すべて</option>
+                  <% tags.forEach(t => { %>
+                    <option value="<%= t %>"><%= t %></option>
+                  <% }) %>
+                </select>
+              </label>
+              <label>年
+                <select id="filterYear">
+                  <option value="">すべて</option>
+                  <% years.forEach(y => { %>
+                    <option value="<%= y %>"><%= y %></option>
+                  <% }) %>
+                </select>
+              </label>
+              <label>キーワード
+                <input id="filterKeyword" placeholder="タイトル / 説明を検索">
+              </label>
+            </div>
 
-            <div class="brand-grid">
+            <div class="brand-grid" id="brandGrid">
                 <% projects.forEach(p => { %>
                     <% const descOverride = p.title === '絵本のおまじない'
                         ? '「大丈夫」をそっと渡す、絵本のギフト。'
@@ -153,8 +178,14 @@
                        const processOverride = p.title === '絵本のおまじない'
                         ? '自分を責めてしまう瞬間に寄り添う言葉を、物語として編み直した。'
                         : p.process || '';
+                       const year = (p.date || '').slice(0,4);
                     %>
-                    <div class="brand-card">
+                    <div class="brand-card"
+                         data-title="<%= p.title %>"
+                         data-desc="<%= descOverride %>"
+                         data-content="<%= p.content || '' %>"
+                         data-tag="<%= p.tag || '' %>"
+                         data-year="<%= year %>">
                     <div class="brand-card__media">
                         <img src="<%= p.image_url %>" alt="<%= p.title %>">
                     </div>
@@ -171,6 +202,8 @@
                         data-title="<%= p.title %>"
                         data-desc="<%= descOverride %>"
                         data-process="<%= processOverride %>"
+                        data-content="<%= p.content || '' %>"
+                        data-learning="<%= p.learning || '' %>"
                         data-link="/projects/<%= p.id %>"
                     >→</button>
                     </div>
@@ -349,6 +382,8 @@
     <div class="brand-modal__body">
       <p class="brand-modal__desc" id="brandModalDesc"></p>
       <p class="brand-modal__process" id="brandModalProcess"></p>
+      <p class="brand-modal__content" id="brandModalContent"></p>
+      <p class="brand-modal__learning" id="brandModalLearning"></p>
     </div>
   </div>
 </div>
